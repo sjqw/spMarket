@@ -17,25 +17,93 @@
     </div>-->
     <div style="height: 3rem;"></div>
 {% endblock %}
+{% block meta_css %}
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+{% endblock %}
 {% block content %}
     <form action="" method="post">
         {% csrf_token %}
-        <input type="text" name="UserName" placeholder="请输入手机号" class="login-name">
-        <p>{{ form.errors.UserName.0 }}</p>
+        <input type="text" name="UserName" id="id_phone" placeholder="请输入手机号" class="login-name">
+        <p class="error">{{ form.errors.UserName.0 }}</p>
         <input type="password" name="pwd" placeholder="请输入密码" class="login-password">
-        <p>{{ form.errors.pwd.0 }}</p>
+        <p class="error">{{ form.errors.pwd.0 }}</p>
         <input type="password" name="pwdd" placeholder="确认密码" class="login-name">
-        <p>{{ parms }}</p>
+        <p class="error">{{ form.errors.pwdd.0 }}</p>
         <div class="yzm" style="margin-top: 1.5rem;">
-            <input type="text" class="reg-yzm" placeholder="输入验证码"/>
-            <input type="button" class="yzm-hq" value="获取验证码"/>
+            <input type="text" class="reg-yzm" name="verify_code" placeholder="输入验证码"/>
+            <input type="button" name="" class="yzm-hq" value="获取验证码"/>
+
         </div>
+        <p class="error">{{ form.errors.verify_code.0 }}</p>
         <input type="submit" class="login-btn" value="立即注册">
         <div class="agree">
-            <input type="checkbox" name="" value="同意" checked="">&nbsp;同意
+            <input type="checkbox" name="agree" value="同意" checked="">&nbsp;同意
+            <p class="error">{{ form.errors.agree.0 }}</p>
             <a href="" class="xy">《用户协议》</a>
-            <div class="r-login">已有账号，请<a href="login.html" class="l-login">登录</a></div>
+            <div class="r-login">已有账号，请<a href="{% url '用户:login' %}" class="l-login">登录</a></div>
         </div>
     </form>
+{% endblock %}
+{% block footer_js %}
+    <script>
+        $(function () {
+            $('.yzm-hq').on('click', function () {
+                //获取手机号码
+                var phone = $('#id_phone').val();
+                if (phone.length != 11) {
+                    alert('手机号码格式错误!');
+                    return false;
+                }
+                data = {
+                    'tel': phone,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                };
+                var that = this;
+                $.post("{% url '用户:VerifyCode' %}", data, function (response) {
+                    if (response.status == 200) {
+                        //成功
+                        //按钮禁止再次点击
+                        $(that).attr('disabled', 'disabled');
+                        //颜色变灰
+                        $(that).css('background-color', '#ccc');
+                        //在按钮上显示倒计时间
+                        var time = 60;
+                        var msg = time + '秒后重新发送';
+                        $(that).val(msg)
+                        //定时器改变文字中显示的时间
+                        var timer = window.setInterval(function () {
+                            --time;
+                            if(time==0){
+                                window.clearInterval(timer);
+                                $(that).removeAttr('disabled')
+                        //颜色变灰
+                                $(that).css('background-color', '#76bb2a')
+                                msg ='重新发送';
+                                $(that).val(msg);
+                                return;
+                            }
+                            msg = time + '秒后重新发送';
+                            $(that).val(msg)
+
+                        }, 1000);
+
+
+                    } else {
+                        alert(response.msg)
+
+
+                    }
+                    ;
+
+                });
+
+            });
+
+        });
+    </script>
 {% endblock %}
 	   

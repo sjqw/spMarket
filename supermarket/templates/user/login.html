@@ -19,14 +19,12 @@
     <div style="height: 3rem;"></div>
 {% endblock %}
 {% block content %}
-    <form action="" method="post">
+    <form action="" method="post"  >
         {% csrf_token %}
-        <input type="text" name="UserName" id="mobile" placeholder="请输入用户名/手机号" class="login-name">
+        <input type="text" name="UserName" id="mobile" placeholder="请输入手机号" class="login-name">
         <p>{{ form.errors.UserName.0 }}</p>
-        <p>{{ data }}</p>
         <input type="password" name="pwd" id="password" placeholder="请输入密码" class="login-password">
         <p>{{ form.errors.pwd.0 }}</p>
-        <p>{{ date }}</p>
         <input type="submit" class="login-btn" value="我要登录">
     </form>
     <div class="agree">
