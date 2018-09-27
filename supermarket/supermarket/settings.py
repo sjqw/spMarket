@@ -26,6 +26,7 @@ SECRET_KEY = 'lm*+0b$-ox%px*dff_$^)kd(1ikl#1uwa1k@k*+4-f-024+=#&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -38,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'haystack',  # 全文检索框架
-    'user',
-    'goods',
+    'user',#用户
+    'goods',#商品
+    'cars',#购物车
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 添加ckeditor富文本编辑器文件上传部件
 ]

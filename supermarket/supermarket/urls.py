@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^ckeditor/', include("ckeditor_uploader.urls")),
     #全文搜索框架
     url(r'^search/', include('haystack.urls')),
+    url(r'^cars/', include('cars.urls',namespace='cars')),
 ]
