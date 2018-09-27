@@ -1,10 +1,15 @@
 {% extends 'public/base.html' %}
 {% load static %}
 {% block cs_js %}
-    <link rel="icon" type="image/png" href="/theme/default/images/favicon.png">
     <link href="{% static 'css/amazeui.min.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'css/check.css' %}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block meta_js %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/amazeui.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'img_js/webuploader.css' %}">
+    <script type="text/javascript" src="{% static 'img_js/webuploader.js' %}"></script>
 {% endblock %}
 
 {% block header %}
@@ -21,64 +26,121 @@
     <div style="height: 49px;"></div>
 {% endblock %}
 {% block content %}
-    <ul class="safty1">
-        <li>
-            <a href="">
-                <i style="margin-top: 25px;">头像</i>
-                <div class="infor-pic">
-                    <img src="{% static 'images/infortx.png' %}"/>
+
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <ul class="safty1">
+            <li>
+                <a href="">
+                    <i style="margin-top: 25px;">头像</i>
+                    <div class="infor-pic">
+                        <img id="head_img" src="{{ MEDIA_URL }}{{ content.head }}"/>
+                    </div>
+                </a>
+                <div id="uploader-demo">
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
                 </div>
-            </a>
-        </li>
-        <li>
-            <a href="">
+
+            </li>
+            <!-- <form action="" method="post" enctype="multipart/form-data">
+{#                {% csrf_token %}#}
+                <input type="file" name="head">
+                <input type="submit" value="提交">
+
+            </form>-->
+            <li>
+
                 <i>昵称</i>
-                <input class="infor-tele" placeholder="默契"/>
-            </a>
-        </li>
-        <li>
-            <a href="">
+                <input class="infor-tele" name="nikename" placeholder="{{ content.nikename }}"/>
+                <p>{{ form.errors.nikename.0 }}</p>
+
+            </li>
+            <p>{{ form.errors.nikename.0 }}</p>
+            <li>
+
                 <i>性别</i>
                 <i class="infor-tele">
                     <label class="am-radio-inline">
-                        <input type="radio" name="radio10" checked="checked" value="1" data-am-ucheck>男
+                        <input type="radio" name="gender" checked="checked" value="{{ content.gender }}"
+                               data-am-ucheck>男
                     </label>
                     <label class="am-radio-inline">
-                        <input type="radio" name="radio10" value="1" data-am-ucheck>女
+                        <input type="radio" name="gender" value="{{ content.gender }}" data-am-ucheck>女
+                    </label>
+                    <label class="am-radio-inline">
+                        <input type="radio" name="gender" value="{{ content.gender }}" data-am-ucheck>保密
                     </label>
                 </i>
-            </a>
-        </li>
-        <li>
-            <a href="">
+
+            </li>
+            <li>
+
                 <i>生日</i>
-                <input class="infor-tele" placeholder="出生日期"/>
-            </a>
-        </li>
-    </ul>
-    <div style="height: 10px; background: #efefef;"></div>
-    <ul class="safty1">
-        <li>
-            <i>学校</i>
-            <input class="infor-tele" placeholder="就读于哪个学校"/>
-        </li>
-        <li>
-            <i>位置</i>
-            <input class="infor-tele" placeholder="详细地址"/>
-        </li>
-        <li>
-            <i>故乡</i>
-            <input class="infor-tele" placeholder="来自哪里"/>
-        </li>
-        <li>
-            <i>手机</i>
-            <input class="infor-tele" placeholder="13012345678"/>
-        </li>
-    </ul>
+                <input class="infor-tele" name="birthday" placeholder="{{ content.birthday }}"/>
+
+            </li>
+        </ul>
+        <div style="height: 10px; background: #efefef;"></div>
+        <ul class="safty1">
+            <li>
+                <i>学校</i>
+                <input class="infor-tele" name="school_name" placeholder="{{ content.school_name }}"/>
+            </li>
+            <p>{{ form.errors.school_name.0 }}</p>
+            <li>
+                <i>位置</i>
+                <input class="infor-tele" name="address" placeholder="{{ content.address }}"/>
+            </li>
+            <p>{{ form.errors.address.0 }}</p>
+            <li>
+                <i>故乡</i>
+                <input class="infor-tele" name="hometown" placeholder="{{ content.hometown }}"/>
+            </li>
+            <p>{{ form.errors.hometown.0 }}</p>
+            <li>
+                <i>手机</i>
+                <input class="infor-tele" name="UserName" placeholder="{{ content.UserName }}"/>
+            </li>
+            <p>{{ form.errors.UserName.0 }}</p>
+        </ul>
+        <div><input type="submit" value="提交修改"></div>
+    </form>
 {% endblock %}
 {% block footer_js %}
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/amazeui.min.js' %}"></script>
+
+    <script>
+        // 初始化Web Uploader
+        var uploader = WebUploader.create({
+            // 选完文件后，是否自动上传。
+            auto: true,
+            // swf文件路径
+            swf: "{% static 'img_js/Uploader.swf' %}",
+            // 文件接收服务端。
+            server: "{% url '用户:img_load' %}",
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker',
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+        // 当有文件添加进来的时候
+        uploader.on('fileQueued', function (file) {
+            $img = $("#head_img");
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader.makeThumb(file, function (error, src) {
+                $img.attr('src', src);
+            }, 100, 100);
+        });
+    </script>
 {% endblock %}
+
 
 
