@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'user',#用户
     'goods',#商品
     'cars',#购物车
+    'order',#订单
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 添加ckeditor富文本编辑器文件上传部件
 ]
